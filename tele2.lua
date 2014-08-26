@@ -19,19 +19,18 @@ wget.callbacks.download_child_p = function(urlpos, parent, depth, start_url_pars
   local url = urlpos["url"]["url"]
 
   -- Skip redirect from home.swipnet.se
-  if url == "http://www.tele2.se/" or
-    url == "http://tele2.se/" then
+  if string.match(url, "www%.tele2%.se/") then
     return false
-  elseif string.match(url, "cgi%.swipnet%.se/") then
+  elseif string.match(url, "cgi%.tele2%.se/") then
     return false
-  elseif string.match(url, "www%.swipnet%.se/") then
+  elseif string.match(url, "www%.tele2%.se/") then
     return false
-  elseif string.match(url, "irc%.swipnet%.se/") then
+  elseif string.match(url, "irc%.tele2%.se/") then
     return false
   elseif string.match(url, "//////////") then
     return false
-  elseif string.match(url, "swipnet%.se/([^/]+)/") then
-    local directory_name = string.match(url, "swipnet%.se/([^/]+)/")
+  elseif string.match(url, "tele2%.se/([^/]+)/") then
+    local directory_name = string.match(url, "tele2%.se/([^/]+)/")
     directory_name = string.gsub(directory_name, '%%7E', '~')
     
     if directory_name ~= item_value then
@@ -68,10 +67,14 @@ wget.callbacks.httploop_result = function(url, err, http_stat)
     if tries >= 5 then
       io.stdout:write("\nI give up...\n")
       io.stdout:flush()
-      return wget.actions.NOTHING
+      return wget.actions.ABORT
     else
       return wget.actions.CONTINUE
     end
+  elseif status_code == 0 then
+    io.stdout:write("\nServer returned "..http_stat.statcode..". Sleeping.\n")
+    io.stdout:flush()
+    return wget.actions.ABORT
   else
     return wget.actions.NOTHING
   end
