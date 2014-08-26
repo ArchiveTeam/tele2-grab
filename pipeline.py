@@ -218,7 +218,7 @@ class WgetArgs(object):
 project = Project(
     title="Tele2",
     project_html="""
-        <img class="project-logo" alt="Project logo" src="http://archiveteam.org/images/8/81/Frank_sheep_poses.jpg" height="50px" title=""/>
+        <img class="project-logo" alt="Project logo" src="http://archiveteam.org/images/7/78/Frank_overlay_archivetime.png" height="50px" title=""/>
         <h2>home.tele2.se <span class="links"><a href="http://home.tele2.se/">Website</a> &middot; <a href="http://tracker.archiveteam.org/tele2/">Leaderboard</a></span></h2>
         <p>Archiving Swedish websites from home.tele2.se.</p>
     """,
