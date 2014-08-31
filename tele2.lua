@@ -23,11 +23,13 @@ wget.callbacks.download_child_p = function(urlpos, parent, depth, start_url_pars
     return false
   elseif string.match(url, "cgi%.tele2%.se/") then
     return false
+  elseif string.match(url, "www%.home%.tele2%.se/") then
+    return false
   elseif string.match(url, "irc%.tele2%.se/") then
     return false
   elseif string.match(url, "///") then
     return false
-  elseif string.match(url, "tele2%.se/([^/]+)/") then
+  elseif string.match(url, "home%.tele2%.se/[^/]+/") then
     local directory_name = string.match(url, "tele2%.se/([^/]+)/")
     directory_name = string.gsub(directory_name, '%%7E', '~')
     
@@ -39,6 +41,18 @@ wget.callbacks.download_child_p = function(urlpos, parent, depth, start_url_pars
     else
       return verdict
     end
+  elseif string.match(url, "http://[^%./]+%.[^%./]+%.[^%./]+%.[^/]+/") then
+    return false
+  elseif string.match(url, "http://mailto[^/]+/") then
+    return false
+  elseif string.match(url, "%.tele2%.se") then
+    if not string.match(url, "home%.tele2%.se") then
+      return false
+    else
+      return verdict
+    end
+  elseif string.match(url, "/[^@/]+@[^/]/") then
+    return false
   else
     return verdict
   end
@@ -65,14 +79,25 @@ wget.callbacks.httploop_result = function(url, err, http_stat)
     if tries >= 5 then
       io.stdout:write("\nI give up...\n")
       io.stdout:flush()
-      return wget.actions.ABORT
+      return wget.actions.NOTHING
     else
       return wget.actions.CONTINUE
     end
   elseif status_code == 0 then
     io.stdout:write("\nServer returned "..http_stat.statcode..". Sleeping.\n")
     io.stdout:flush()
-    return wget.actions.ABORT
+
+    os.execute("sleep 10")
+
+    tries = tries + 1
+
+    if tries >= 5 then
+      io.stdout:write("\nI give up...\n")
+      io.stdout:flush()
+      return wget.actions.ABORT
+    else
+      return wget.actions.CONTINUE
+    end
   else
     return wget.actions.NOTHING
   end
