@@ -25,7 +25,7 @@ wget.callbacks.download_child_p = function(urlpos, parent, depth, start_url_pars
     return false
   elseif string.match(url, "irc%.tele2%.se/") then
     return false
-  elseif string.match(url, "//////////") then
+  elseif string.match(url, "///") then
     return false
   elseif string.match(url, "tele2%.se/([^/]+)/") then
     local directory_name = string.match(url, "tele2%.se/([^/]+)/")
